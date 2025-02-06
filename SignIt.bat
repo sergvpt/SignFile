@@ -14,7 +14,7 @@ set SignOutput=%SignPath%_SignOut\
 set SignInProgress=%SignOutput%InProgress\
 set WaitingList=%SignInProgress%waiting.list
 
-rem Если в папке SignOutput такой есть - удаляем
+rem Р•СЃР»Рё РІ РїР°РїРєРµ SignOutput С‚Р°РєРѕР№ РµСЃС‚СЊ - СѓРґР°Р»СЏРµРј
 for %%f in (%FileName% %FileName%.NotSigned %FileName%.NotCheckedForVirus.NotSigned %FileName%.NotCheckedForVirus.Signed %FileName%.Virus.NotSigned %FileName%.Virus.Signed) do (
 	if exist %SignOutput%%%f (
 		echo Deleting %SignOutput%%%f
@@ -26,13 +26,13 @@ for %%f in (%FileName% %FileName%.NotSigned %FileName%.NotCheckedForVirus.NotSig
 	)
 )
 
-rem Копируем файл в папку для подписания
+rem РљРѕРїРёСЂСѓРµРј С„Р°Р№Р» РІ РїР°РїРєСѓ РґР»СЏ РїРѕРґРїРёСЃР°РЅРёСЏ
 echo.
 echo Copy %FileName% to %SignInput%
 copy %1 %SignInput%%FileName% >nul 2>nul
 if ERRORLEVEL 1 goto ErrorNoAccessToSignInFolder
 
-rem Проверяем и оповещаем о наличии очереди на подписание
+rem РџСЂРѕРІРµСЂСЏРµРј Рё РѕРїРѕРІРµС‰Р°РµРј Рѕ РЅР°Р»РёС‡РёРё РѕС‡РµСЂРµРґРё РЅР° РїРѕРґРїРёСЃР°РЅРёРµ
 set WaitingTime=0
 set WaitingFiles=
 
@@ -66,7 +66,7 @@ set checkThat=checkFileGone
 set gotoError=ErrorNoStarted
 goto wait
 
-rem Файл забран для подписания
+rem Р¤Р°Р№Р» Р·Р°Р±СЂР°РЅ РґР»СЏ РїРѕРґРїРёСЃР°РЅРёСЏ
 :SigningStarted
 echo. & echo ====== SIGING STARTED =======
 call :calculateWaitingTime %FileName%
@@ -130,7 +130,7 @@ endlocal & set WaitingFiles=%WaitingFiles%
 exit /b 0
 
 :calculateWaitingTime
-rem В качестве параметра 1 передаётся имя файла (можно несколько одновременно)
+rem Р’ РєР°С‡РµСЃС‚РІРµ РїР°СЂР°РјРµС‚СЂР° 1 РїРµСЂРµРґР°С‘С‚СЃСЏ РёРјСЏ С„Р°Р№Р»Р° (РјРѕР¶РЅРѕ РЅРµСЃРєРѕР»СЊРєРѕ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ)
 setlocal enabledelayedexpansion
 set WaitingTime=0
 for %%n in (%~1) do (
@@ -141,7 +141,7 @@ for %%n in (%~1) do (
 		for %%f in (!CurrentFile!) do (
 			set CurrentFileSize=%%~zf
 			
-			rem Задаём скорость подписания в зависимости от типа файла
+			rem Р—Р°РґР°С‘Рј СЃРєРѕСЂРѕСЃС‚СЊ РїРѕРґРїРёСЃР°РЅРёСЏ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РёРїР° С„Р°Р№Р»Р°
 			set Ratio=2
 			if "%%~xf" == ".msi" (
 				set Ratio=2
@@ -154,13 +154,13 @@ for %%n in (%~1) do (
 			)
 			set /a SigningSpeed=1000000*!Ratio!
 			
-			rem Высчитываем время подписания одного файла
+			rem Р’С‹СЃС‡РёС‚С‹РІР°РµРј РІСЂРµРјСЏ РїРѕРґРїРёСЃР°РЅРёСЏ РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
 			set /a TimeSignOneFile=!CurrentFileSize!/!SigningSpeed!
 			if !TimeSignOneFile! lss 20 (
 				set TimeSignOneFile=20
 			)
 			
-			rem Высчитываем общее время подписания
+			rem Р’С‹СЃС‡РёС‚С‹РІР°РµРј РѕР±С‰РµРµ РІСЂРµРјСЏ РїРѕРґРїРёСЃР°РЅРёСЏ
 			set /a WaitingTime=!WaitingTime!+!TimeSignOneFile!
 		)
 	)
@@ -221,7 +221,7 @@ if %FirstLoopStep% gtr %MaxWaiting% goto %gotoError%
 goto %checkThat%
 
 :showWaitingTime
-rem Параметр %~1 - время ожидания
+rem РџР°СЂР°РјРµС‚СЂ %~1 - РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ
 setlocal enabledelayedexpansion
 if %~1 lss 61 (
 	echo - %~1 sec
